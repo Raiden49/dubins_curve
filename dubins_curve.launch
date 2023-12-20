@@ -1,0 +1,12 @@
+<launch>
+
+    <node name="dubins_curve_node" pkg="dubins_curve" type="dubins_curve_node" output="screen">
+
+        <!-- <remap from="dubins_curve_node/cmd_vel" to="cmd_vel"/> -->
+        <!-- <remap from="dubins_curve_node/odom" to="odom"/> -->\
+        <remap from="dubins_curve_node/visualization_marker" to="visualization_marker"/>
+
+    </node>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dubins_curve)/dubins_rviz.rviz"/>
+
+</launch>
