@@ -3,10 +3,11 @@
 namespace dubins_curve
 {
 bool DubinsTool::CoordTransform(
-            const point_type& input_pos, const double& theta, 
-            const double& radius1, const double& radius2, 
-            const std::string& dir, point_type& output_pos) {
+        const point_type& input_pos, const double& theta, 
+        const double& radius1, const double& radius2, 
+        const std::string& dir, point_type& output_pos) {
     
+    // 计算圆心，与计算切点时的公式有差异！！！
     if (dir == "left") {
         output_pos.first.first = input_pos.first.first + 
                 radius1 * cos(theta) - radius2 * sin(theta);

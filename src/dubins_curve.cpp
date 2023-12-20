@@ -72,16 +72,20 @@ double DubinsCurve::GetDubinsCurveLength(
 
 curve_type DubinsCurve::LSLCurve() {
 
+    // 两个圆心的差值向量
     auto center_line = dubins_tool_->GetDiffVec(left_center2, left_center1);
-    double R = dubins_tool_->GetDistance(left_center2, left_center1);
+    double R = dubins_tool_->GetDistance(left_center2, left_center1) / 2;
+    // 角度计算，后面的那项要考虑到，否则不正确！！！可以自行推导或是参考我的博客
     double theta = atan2(center_line[1], center_line[0]) - acos(0);
 
+    // 计算两个切点
     point_type tangent_pos1, tangent_pos2;
     dubins_tool_->CoordTransform(
             left_center1, theta, radius_, 0, "left", tangent_pos1);
     dubins_tool_->CoordTransform(
             left_center2, theta, radius_, 0, "left", tangent_pos2);
 
+    // 记录两个圆心，两个切点，即所有需要的路径点已记录完毕
     std::array<point_type, 4> lsl_path = 
             {left_center1, tangent_pos1, tangent_pos2, left_center2};
 
@@ -91,6 +95,7 @@ curve_type DubinsCurve::LSLCurve() {
 
 curve_type DubinsCurve::LSRCurve() {
 
+    // 两个圆心的差值向量
     auto center_line = dubins_tool_->GetDiffVec(right_center2, left_center1);
     double R = dubins_tool_->GetDistance(right_center2, left_center1) / 2;
     if (R < radius_) {
@@ -99,14 +104,17 @@ curve_type DubinsCurve::LSRCurve() {
                 {start_pos_, start_pos_, start_pos_, start_pos_};
         return std::make_pair(lsr_path, INFINITY);
     }
+    // 角度计算，后面的那项要考虑到，否则不正确！！！可以自行推导或是参考我的博客
     double theta = atan2(center_line[1], center_line[0]) - acos(radius_ / R);
 
+    // 计算两个切点
     point_type tangent_pos1, tangent_pos2;
     dubins_tool_->CoordTransform(
             left_center1, theta, radius_, 0, "left", tangent_pos1);
     dubins_tool_->CoordTransform(
             right_center2, theta + M_PI, radius_, 0, "right", tangent_pos2);
 
+    // 记录两个圆心，两个切点，即所有需要的路径点已记录完毕
     std::array<point_type, 4> lsr_path = 
             {left_center1, tangent_pos1, tangent_pos2, right_center2};
 
@@ -116,16 +124,20 @@ curve_type DubinsCurve::LSRCurve() {
 
 curve_type DubinsCurve::RSRCurve() {
 
+    // 两个圆心的差值向量
     auto center_line = dubins_tool_->GetDiffVec(right_center2, right_center1);
-    double R = dubins_tool_->GetDistance(right_center2, right_center1);
+    double R = dubins_tool_->GetDistance(right_center2, right_center1) / 2;
+    // 角度计算，后面的那项要考虑到，否则不正确！！！可以自行推导或是参考我的博客
     double theta = atan2(center_line[1], center_line[0]) + acos(0);
 
+    // 计算两个切点
     point_type tangent_pos1, tangent_pos2;
     dubins_tool_->CoordTransform(
             right_center1, theta, radius_, 0, "right", tangent_pos1);
     dubins_tool_->CoordTransform(
             right_center2, theta, radius_, 0, "right", tangent_pos2);
 
+    // 记录两个圆心，两个切点，即所有需要的路径点已记录完毕
     std::array<point_type, 4> rsr_path = 
             {right_center1, tangent_pos1, tangent_pos2, right_center2};
 
@@ -135,6 +147,7 @@ curve_type DubinsCurve::RSRCurve() {
 
 curve_type DubinsCurve::RSLCurve() {
 
+    // 两个圆心的差值向量
     auto center_line = dubins_tool_->GetDiffVec(left_center2, right_center1);
     double R = dubins_tool_->GetDistance(left_center2, right_center1) / 2;
     if (R < radius_) {
@@ -143,14 +156,17 @@ curve_type DubinsCurve::RSLCurve() {
                 {start_pos_, start_pos_, start_pos_, start_pos_};
         return std::make_pair(rsl_path, INFINITY);
     }
+    // 角度计算，后面的那项要考虑到，否则不正确！！！可以自行推导或是参考我的博客
     double theta = atan2(center_line[1], center_line[0]) + acos(radius_ / R);
 
+     // 计算两个切点
     point_type tangent_pos1, tangent_pos2;
     dubins_tool_->CoordTransform(
             right_center1, theta, radius_, 0, "right", tangent_pos1);
     dubins_tool_->CoordTransform(
             left_center2, theta + M_PI, radius_, 0, "left", tangent_pos2);
 
+    // 记录两个圆心，两个切点，即所有需要的路径点已记录完毕
     std::array<point_type, 4> rsl_path = 
             {right_center1, tangent_pos1, tangent_pos2, left_center2};
 
@@ -160,6 +176,7 @@ curve_type DubinsCurve::RSLCurve() {
 
 std::array<curve_type, 4> DubinsCurve::DubinsCurveSolver(int& index) {
 
+    // 求取四个圆心，第一次左右转的圆心，以及第二次左右转的圆心
     dubins_tool_->CoordTransform(
             start_pos_, start_pos_.second, 0, radius_, "left", left_center1);
     dubins_tool_->CoordTransform(
@@ -197,6 +214,7 @@ std::array<curve_type, 4> DubinsCurve::DubinsCurveSolver(int& index) {
     return solution_array;
 }
 
+// 可视化函数，不涉及Dubins曲线核心计算内容
 visualization_msgs::Marker DubinsCurve::DrawDubinsCurve(
         const std::array<double, 3>& color, const curve_type& path_pub, 
         const std::array<std::string, 3>& dir, const double& alpha = 0.15) {
@@ -299,6 +317,7 @@ void DubinsCurve::DubinsCurveProcess() {
     goal_pose_sub_ = n_.subscribe(
             "/move_base_simple/goal", 1, &DubinsCurve::GoalPoseCallback, this);
 
+    // 用于可视化的一些信息
     std::pair<std::array<std::string, 3>, 
             std::pair<std::string, std::array<double , 3>>> marker_info[4] = {
         std::make_pair(std::array<std::string, 3>{"left", "straight", "left"}, 
@@ -314,6 +333,7 @@ void DubinsCurve::DubinsCurveProcess() {
     // ros spins 10 frames per seconds
     ros::Rate loop_rate(10);
 
+    // 用于发布四条路径
     ros::Publisher marker_pub[4] {};
     for (int i = 0; i < 4; i++) {
         marker_pub[i] = n_.advertise<visualization_msgs::Marker>(
@@ -322,9 +342,11 @@ void DubinsCurve::DubinsCurveProcess() {
 
     while (ros::ok()) {
 
+        // 发布起始点和终点
         init_pose_pub_.publish(init_pose_marker_);
         goal_pose_pub_.publish(goal_pose_marker_);
 
+        // 计算所有的路径，并返回最短路径对应的index, 0-3分别为LSL，LSR，RSR，RSL
         int best_index = 0;
         auto solution_array = DubinsCurveSolver(best_index);
         ROS_INFO_STREAM("the best path is : " 
