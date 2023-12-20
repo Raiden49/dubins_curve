@@ -14,4 +14,4 @@ source ./build/devel/setup.bash
 roslaunch dubins_curve dubins_curve.launch
 ```
 
-![image](B:\something_for_work\proj_github\dubins_curve\docs\image.gif)
+![image](docs/image.gif)
