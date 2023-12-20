@@ -20,8 +20,8 @@ void DubinsCurve::InitPoseCallback(
     init_pose_marker_.scale.y = 0.05;
     init_pose_marker_.scale.z = 0.05;
     init_pose_marker_.color.a = 1.0;
-    init_pose_marker_.color.r = 1.0;
-    init_pose_marker_.color.g = 0.0;
+    init_pose_marker_.color.r = 0.0;
+    init_pose_marker_.color.g = 1.0;
     init_pose_marker_.color.b = 0.0;
 
     ROS_INFO_STREAM("the init pose:" << start_pos_.first.first << ", "
@@ -46,8 +46,8 @@ void DubinsCurve::GoalPoseCallback(
     goal_pose_marker_.scale.y = 0.05;
     goal_pose_marker_.scale.z = 0.05;
     goal_pose_marker_.color.a = 1.0;
-    goal_pose_marker_.color.r = 0.0;
-    goal_pose_marker_.color.g = 1.0;
+    goal_pose_marker_.color.r = 1.0;
+    goal_pose_marker_.color.g = 0.0;
     goal_pose_marker_.color.b = 0.0;
 
     ROS_INFO_STREAM("the init pose:" << end_pos_.first.first << ", "
