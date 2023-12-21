@@ -44,9 +44,20 @@ std::vector<double> DubinsTool::GetDiffVec(
 }
 
 double DubinsTool::GetDelta(const std::vector<double>& diff_vec1, 
-        const std::vector<double>& diff_vec2) {
+        const std::vector<double>& diff_vec2, const std::string& dir) {
     
-    return atan2(abs(diff_vec2[1]), abs(diff_vec2[0])) + 
-            atan2(abs(diff_vec1[1]), abs(diff_vec1[0]));
+    double theta1 = atan2(diff_vec1[1], diff_vec1[0]);
+    double theta2 = atan2(diff_vec2[1], diff_vec2[0]);
+
+    double delta = theta2 - theta1;
+
+    if (dir == "left" && theta1 > theta2) {
+        delta = theta2 + 2 * M_PI - theta1;
+    }
+    else if (dir == "right" && theta1 < theta2) {
+        delta = theta1 + 2 * M_PI - theta2;
+    }
+
+    return delta;
 }
 }

@@ -66,10 +66,11 @@ class DubinsTool {
          * 
          * @param diff_vec1 
          * @param diff_vec2 
+         * @param dir 
          * @return double 角度值，标量值
          */
         double GetDelta(const std::vector<double>& diff_vec1, 
-                const std::vector<double>& diff_vec2);
+                const std::vector<double>& diff_vec2, const std::string& dir);
 };
 }
 

@@ -71,7 +71,8 @@ class DubinsCurve {
          */
         double GetDubinsCurveLength(
                 const point_type& center1, const point_type& center2, 
-                const point_type& tangent_pos1, const point_type& tangent_pos2);
+                const point_type& tangent_pos1, const point_type& tangent_pos2, 
+                const std::array<std::string, 3>& dir);
         /**
          * @brief 求解Dubins曲线的主要函数
          * 

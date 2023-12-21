@@ -56,15 +56,16 @@ void DubinsCurve::GoalPoseCallback(
 
 double DubinsCurve::GetDubinsCurveLength(
         const point_type& center1, const point_type& center2, 
-        const point_type& tangent_pos1, const point_type& tangent_pos2) {
+        const point_type& tangent_pos1, const point_type& tangent_pos2, 
+        const std::array<std::string, 3>& dir) {
     
     // arc length = radius * theta
     double arc_length1 = radius_ * dubins_tool_->GetDelta(
             dubins_tool_->GetDiffVec(start_pos_, center1),
-            dubins_tool_->GetDiffVec(tangent_pos1, center1));
+            dubins_tool_->GetDiffVec(tangent_pos1, center1), dir[0]);
     double arc_length2 = radius_ * dubins_tool_->GetDelta(
             dubins_tool_->GetDiffVec(tangent_pos2, center2),
-            dubins_tool_->GetDiffVec(end_pos_, center2));
+            dubins_tool_->GetDiffVec(end_pos_, center2), dir[2]);
     double tangent_length = dubins_tool_->GetDistance(tangent_pos1, tangent_pos2);
 
     return arc_length1 + tangent_length + arc_length2;
@@ -90,7 +91,8 @@ curve_type DubinsCurve::LSLCurve() {
             {left_center1, tangent_pos1, tangent_pos2, left_center2};
 
     return std::make_pair(lsl_path, GetDubinsCurveLength(
-            left_center1, left_center2, tangent_pos1, tangent_pos2));
+            left_center1, left_center2, tangent_pos1, tangent_pos2, 
+            std::array<std::string, 3> {"left", "stright", "left"}));
 }
 
 curve_type DubinsCurve::LSRCurve() {
@@ -119,7 +121,8 @@ curve_type DubinsCurve::LSRCurve() {
             {left_center1, tangent_pos1, tangent_pos2, right_center2};
 
     return std::make_pair(lsr_path, GetDubinsCurveLength(
-            left_center1, right_center2, tangent_pos1, tangent_pos2));
+            left_center1, right_center2, tangent_pos1, tangent_pos2, 
+            std::array<std::string, 3> {"left", "stright", "right"}));
 }
 
 curve_type DubinsCurve::RSRCurve() {
@@ -142,7 +145,8 @@ curve_type DubinsCurve::RSRCurve() {
             {right_center1, tangent_pos1, tangent_pos2, right_center2};
 
     return std::make_pair(rsr_path, GetDubinsCurveLength(
-            right_center1, right_center2, tangent_pos1, tangent_pos2));
+            right_center1, right_center2, tangent_pos1, tangent_pos2, 
+            std::array<std::string, 3> {"right", "stright", "right"}));
 }
 
 curve_type DubinsCurve::RSLCurve() {
@@ -171,7 +175,8 @@ curve_type DubinsCurve::RSLCurve() {
             {right_center1, tangent_pos1, tangent_pos2, left_center2};
 
     return std::make_pair(rsl_path, GetDubinsCurveLength(
-            right_center1, left_center2, tangent_pos1, tangent_pos2));
+            right_center1, left_center2, tangent_pos1, tangent_pos2, 
+            std::array<std::string, 3> {"right", "stright", "left"}));
 }
 
 std::array<curve_type, 4> DubinsCurve::DubinsCurveSolver(int& index) {
